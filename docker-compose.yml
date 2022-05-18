@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+    wallet-php:
+        container_name: wallet-php
+        build:
+            context: ./
+            dockerfile: images/php/Dockerfile
+        ports:
+            - "8080:80"
+        volumes:
+            - ./config/apache/default.conf:/etc/apache2/sites-enabled/default.conf
+            - type: bind
+              source: ./src
+              target: /var/www/html
+    wallet-mysql:
+        container_name: wallet-mysql
+        platform: linux/x86_64
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./storage/mysql:/var/lib/mysql
+    wallet-phpmyadmin:
+        container_name: wallet-phpmyadmin
+        image: phpmyadmin
+        ports:
+            - "3305:80"
+        restart: always
+        environment:
+            PMA_HOST: wallet-mysql
+            PMA_PASSWORD: ""
+        depends_on:
+            - wallet-mysql
+volumes:
+    src:
