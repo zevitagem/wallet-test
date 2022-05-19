@@ -8,7 +8,8 @@
         },
         "classmap": [
             "test/"
-        ]
+        ],
+        "files": ["helpers/functions.php"]
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"

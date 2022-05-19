@@ -4,16 +4,8 @@ namespace App\Infrastructure\Repositories;
 
 use App\Infrastructure\Repositories\AbstractCrudRepository;
 
-//use app\models\resources\DatabaseResource;
-
 class DatabaseRepository extends AbstractCrudRepository
 {
-
-//    public function __construct()
-//    {
-//        parent::setModel(new DatabaseResource());
-//    }
-
     public function getTables()
     {
         $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME ASC";
@@ -22,4 +14,16 @@ class DatabaseRepository extends AbstractCrudRepository
         return $res->fetchAll(\PDO::FETCH_COLUMN);
     }
 
+    public function getTotalTables(string $database): int
+    {
+        $sql = "SELECT count(*) AS total_number_tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?";
+
+        $sth = $this->getConnectionDB()->prepare($sql);
+
+        $sth->bindParam(1, $database, \PDO::PARAM_STR);
+
+        $this->_execute($sth);
+
+        return (int) $sth->fetchObject()->total_number_tables;
+    }
 }

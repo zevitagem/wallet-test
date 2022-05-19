@@ -11,7 +11,7 @@ abstract class AbstractRepository
 
     public function getConnectionDB()
     {
-        return DatabaseManager::getCon(DatabaseManager::getType());
+        return DatabaseManager::getConnection(DatabaseManager::getType());
     }
 
     public function setModel(AbstractModel $model)
@@ -114,9 +114,9 @@ abstract class AbstractRepository
                 //dd($this->dbConnection->errorInfo());
             }
 
-            if (hasPrintDebug()) {
-                dd($sth->debugDumpParams());
-            }
+//            if (hasPrintDebug()) {
+//                dd($sth->debugDumpParams());
+//            }
         } catch (\PDOException $exc) {
             $this->newException($exc);
         } catch (\Exception $exc) {

@@ -15,25 +15,26 @@ class DatabaseManager
         self::setType($type);
 
         if (!empty(self::$connection[$type])) {
-            return self::getCon($type);
+            return self::getConnection($type);
         }
 
         try {
             $path  = self::getPath($type);
             $class = new $path();
 
-            $result = $class->connect($class->getConfig());
+            $class->connect($class->getConfig());
+            $connection = $class->getConnection();
         } catch (Throwable $e) {
-            $result         = null;
-            self::$lastType = null;
+            $connection     = null;
+            $class          = null;
 
             throw $e;
         } finally {
-            self::$connection[$type] = $result;
+            self::$connection[$type] = compact('connection', 'class');
         }
     }
 
-    private static function getPath(string $type)
+    private static function getPath(string $type): string
     {
         $path = 'App\\Infrastructure\\Adapter\\Database\\'.$type;
 
@@ -57,8 +58,13 @@ class DatabaseManager
         return self::$lastType;
     }
 
-    public static function getCon(string $type): mixed
+    public static function getConnection(string $type): mixed
     {
-        return self::$connection[$type];
+        return self::$connection[$type]['connection'] ?? null;
+    }
+
+    public static function getByType(string $type): mixed
+    {
+        return self::$connection[$type] ?? null;
     }
 }

@@ -8,6 +8,6 @@ class StdoutOutputAdapter implements OutputAdapterInterface
 {
     public function handle(array $data)
     {
-        fwrite(STDOUT, json_encode($data)).'\n';
+        fwrite(STDOUT, json_encode($data)).PHP_EOL;
     }
 }
