@@ -1,16 +1,11 @@
 <?php
 include_once '../vendor/autoload.php';
 
-define('TYPE_DB', 'MYSQL');
+use App\Infrastructure\Libraries\Router;
+use App\Infrastructure\Http\RestInputController;
+use App\Infrastructure\Providers\BootstrapProvider;
 
-use App\Infrastructure\Libraries\Database\DatabaseManager;
+BootstrapProvider::boot();
 
-echo 'Hello World!';
-
-DatabaseManager::connect(TYPE_DB);
-var_dump(DatabaseManager::getCon(TYPE_DB));
-
-//use App\Infrastructure\Http\RestInputController;
-//
-//$input = new RestInputController();
-//$input->handle($_POST);
+$router = new Router(new RestInputController());
+$router->handle();
