@@ -1,3 +1,4 @@
 nbproject
 src/app/vendor
 storage/
+src/app/composer.lock
