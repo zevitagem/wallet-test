@@ -2,10 +2,9 @@
 include_once '../vendor/autoload.php';
 
 use App\Infrastructure\Providers\BootstrapProvider;
-use App\Infrastructure\Command\FillDatabaseController;
+use App\Infrastructure\Command\DatabaseFillCommand;
 
 BootstrapProvider::boot();
 
-$input = new FillDatabaseController();
+$input = new DatabaseFillCommand();
 $input->handle();
-

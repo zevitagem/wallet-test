@@ -26,4 +26,26 @@ class DatabaseRepository extends AbstractCrudRepository
 
         return (int) $sth->fetchObject()->total_number_tables;
     }
+
+    public function dropDatabase(string $database): bool
+    {
+        $sql = "DROP DATABASE IF EXISTS {$database}";
+
+        $sth = $this->getConnectionDB()->prepare($sql);
+
+        $this->_execute($sth);
+
+        return true;
+    }
+
+    public function createDatabase(string $database): bool
+    {
+        $sql = "CREATE DATABASE IF NOT EXISTS {$database}";
+
+        $sth = $this->getConnectionDB()->prepare($sql);
+
+        $this->_execute($sth);
+
+        return true;
+    }
 }
