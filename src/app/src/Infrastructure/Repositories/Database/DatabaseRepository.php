@@ -3,9 +3,10 @@
 namespace App\Infrastructure\Repositories\Database;
 
 use App\Infrastructure\Libraries\Database\DatabaseManager;
+use App\Infrastructure\Repositories\BaseRepository;
 //use app\models\AbstractModel;
 
-abstract class DatabaseRepository
+abstract class DatabaseRepository extends BaseRepository
 {
     protected $model;
 

@@ -3,7 +3,6 @@
 namespace App\Application\DTO;
 
 use App\Application\Contracts\DTOInterface;
-use App\Domain\Contracts\EntityInterface;
 
 abstract class DTO implements DTOInterface
 {
@@ -18,13 +17,14 @@ abstract class DTO implements DTOInterface
                 continue;
             }
 
-            if ($dto->trySetCasePropertyNotExists($key, $value)) {
+            if ($dto->trySetPropertyCaseNotExists($key, $value)) {
                 continue;
             }
 
             throw new \InvalidArgumentException(
                 sprintf('Attribute %s does not exist in %s', $key,
-                    get_class($dto))
+                    get_class($dto)
+                )
             );
         }
 
@@ -36,13 +36,8 @@ abstract class DTO implements DTOInterface
         return get_object_vars($this);
     }
 
-    protected function trySetCasePropertyNotExists(string $key, $value): bool
+    protected function trySetPropertyCaseNotExists(string $key, $value): bool
     {
         return false;
-    }
-
-    public function toDomain(): ?EntityInterface
-    {
-        return null;
     }
 }
