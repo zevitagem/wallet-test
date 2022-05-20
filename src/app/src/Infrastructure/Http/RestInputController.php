@@ -7,48 +7,32 @@ use App\Infrastructure\Traits\HTTPVerbs;
 use App\Infrastructure\Command\DatabaseResetCommand;
 use App\Infrastructure\Adapter\RestOutputAdapter;
 use App\Infrastructure\Contracts\OutputAdapterInterface;
+use App\Infrastructure\Traits\Configurable;
+use App\Infrastructure\Libraries\Router;
+use App\Infrastructure\Http\BaseController;
 
-class RestInputController implements InputAdapterInterface
+class RestInputController extends BaseController
 {
-    use HTTPVerbs;
-    
-    private RestOutputAdapter $output;
-
-    public function __construct()
-    {
-        $this->output = new RestOutputAdapter();
-    }
-
     public function handle()
     {
-        // do nothinhg;
-    }
+        $data = $this->getConfig();
 
-    public function setOutputAdapter(OutputAdapterInterface $output)
-    {
-        return null;
-    }
+        $className = ucfirst($data['preAction'])."Controller";
+        $file      = "../src/Infrastructure/Http/$className.php";
 
-    public function handleGet()
-    {
-        $this->mustGet();
+        if (!file_exists($file)) {
+            return $this->output->handle([
+                    'status' => false,
+                    'message' => sprintf('Could not resolve request with this controller sent: "%s"',
+                        $data['preAction'])
+            ]);
+        }
 
-        echo 'vou fazer';
-    }
+        include_once $file;
+        $fullClassName = 'App\\Infrastructure\\Http\\'.$className;
+        $instance      = new $fullClassName;
 
-    public function handlePost()
-    {
-        $this->mustPost();
-
-        echo 'vou fazer';
-    }
-
-    public function reset()
-    {
-        $this->mustPost();
-
-        $command = new DatabaseResetCommand();
-        $command->setOutputAdapter($this->output);
-        $command->handle();
+        $router = new Router($instance);
+        $router->handle();
     }
 }

@@ -6,17 +6,40 @@ use App\Infrastructure\Contracts\InputAdapterInterface;
 
 class Router
 {
+    private string $preAction;
+    private string $action;
+
     public function __construct(private InputAdapterInterface $controller)
     {
+
+    }
+
+    public function getController(): InputAdapterInterface
+    {
+        return $this->controller;
+    }
+
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+
+    public function getPreAction(): string
+    {
+        return $this->preAction;
     }
 
     public function handle()
     {
+        $extracted       = $this->extract();
+        $this->action    = $extracted['action'];
+        $this->preAction = $extracted['preAction'];
+
         try {
             $action = $this->getAction();
 
             if (empty($action) || $action === 'index') {
-                return $this->controller->index();
+                return $this->call('index');
             }
 
             if (!method_exists($this->controller, $action)) {
@@ -26,25 +49,40 @@ class Router
                 );
             }
 
-            $this->controller->{$action}();
+            $this->call($action);
         } catch (\Throwable $exc) {
             die(
                 json_encode([
-                    'status' => false,
-                    'message' => $exc->getMessage()
+                'status' => false,
+                'message' => $exc->getMessage()
                 ])
             );
         }
     }
 
-    private function getAction(): string
+    private function call(string $method)
+    {
+        $this
+            ->getController()
+            ->configure([
+                'pre_action' => $this->getPreAction()])
+            ->{$method}();
+    }
+
+    public function extract(): array
     {
         $uri = $_SERVER['REQUEST_URI'];
 
         $levels = explode('/', $uri);
+        $total  = count($levels);
 
-        end($levels);
+        $action    = $levels[$total - 1];
+        $preAction = $levels[$total - 2];
 
-        return current($levels);
+        if ($preAction == 'public') {
+            $preAction = 'transaction';
+        }
+
+        return compact('action', 'preAction');
     }
 }

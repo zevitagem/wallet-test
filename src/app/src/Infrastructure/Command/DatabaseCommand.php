@@ -8,9 +8,12 @@ use App\Infrastructure\Libraries\Database\DatabaseManager;
 use App\Infrastructure\Libraries\Migration\MigrationManager;
 use Throwable;
 use App\Infrastructure\Contracts\OutputAdapterInterface;
+use App\Infrastructure\Traits\Configurable;
 
 abstract class DatabaseCommand implements InputAdapterInterface
 {
+    use Configurable;
+    
     abstract public function getStrategy(): string;
     
     public function __construct()

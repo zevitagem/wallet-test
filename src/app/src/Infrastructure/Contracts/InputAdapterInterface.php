@@ -9,4 +9,6 @@ interface InputAdapterInterface
     public function handle();
 
     public function setOutputAdapter(OutputAdapterInterface $output);
+
+    public function configure(array $data): self;
 }

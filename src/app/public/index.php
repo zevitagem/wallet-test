@@ -7,5 +7,8 @@ use App\Infrastructure\Providers\BootstrapProvider;
 
 BootstrapProvider::boot();
 
-$router = new Router(new RestInputController());
-$router->handle();
+$controller = new RestInputController();
+$router     = new Router($controller);
+
+$controller->configure($router->extract());
+$controller->handle();
