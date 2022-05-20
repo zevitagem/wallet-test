@@ -10,5 +10,5 @@ BootstrapProvider::boot();
 $controller = new RestInputController();
 $router     = new Router($controller);
 
-$controller->configure($router->extract());
+$controller->configure($router->extractUrl());
 $controller->handle();

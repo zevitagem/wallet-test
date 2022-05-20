@@ -7,11 +7,13 @@ use App\Infrastructure\Traits\HTTPVerbs;
 use App\Infrastructure\Adapter\RestOutputAdapter;
 use App\Infrastructure\Contracts\OutputAdapterInterface;
 use App\Infrastructure\Traits\Configurable;
+use App\Application\Traits\AvailabilityWithService as ApplicationServiceManager;
 
 abstract class BaseController implements InputAdapterInterface
 {
     use HTTPVerbs,
-        Configurable;
+        Configurable,
+        ApplicationServiceManager;
     
     protected RestOutputAdapter $output;
 

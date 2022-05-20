@@ -3,20 +3,26 @@
 namespace App\Infrastructure\Http;
 
 use App\Infrastructure\Http\BaseController;
+use App\Application\Services\TransactionService;
 
 class TransactionController extends BaseController
 {
+    public function __construct()
+    {
+        $this->setService(new TransactionService());
+    }
+
     public function handleGet()
     {
         $this->mustGet();
 
-        echo 'vou fazer';
+        echo 'get';
     }
 
     public function handlePost()
     {
         $this->mustPost();
 
-        echo 'vou fazer';
+        $this->getService()->store($_POST);
     }
 }

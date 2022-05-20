@@ -12,7 +12,7 @@ class TransactionService extends BaseCrudService
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
 
         parent::setRepository(new TransactionRepository());
         parent::setHandler(new TransactionHandler());
@@ -21,11 +21,9 @@ class TransactionService extends BaseCrudService
 
     public function store(array $data)
     {
-        parent::handle($data, 'store');
-
+        parent::handle($data, __FUNCTION__);
         $dto = TransactionDTO::fromArray($data);
-
-        parent::validate($dto, $method);
+        parent::validate($dto, __FUNCTION__);
 
         dd($dto->toDomain());
     }
