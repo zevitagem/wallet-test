@@ -33,7 +33,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 
         $sth = $this->getConnectionDB()->prepare($sql);
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return ($sth->rowCount() > 0);
     }
@@ -87,7 +87,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
             $sth->bindParam($columnsBinds[$key], $data[$key]);
         }
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return ($sth->rowCount() > 0) ? $this->getConnectionDB()->lastInsertId()
                 : false;
@@ -109,14 +109,14 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
             $sth->bindParam(":$key", $data[$key]);
         }
 
-        return $this->_execute($sth);
+        return $this->execute($sth);
     }
 
     public function getColumnsObject()
     {
         $sth = $this->getConnectionDB()->prepare("DESCRIBE ".$this->getTable());
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -138,7 +138,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 
         $sth = $this->getConnectionDB()->prepare($sql);
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
