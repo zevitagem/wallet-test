@@ -7,6 +7,11 @@ use App\Infrastructure\Contracts\Repositories\DatabaseLevelInterface;
 
 class MYSQLDatabaseRepository extends MYSQLDatabaseBaseRepository implements DatabaseLevelInterface
 {
+    public function getEntityClass(): string
+    {
+        return '';
+    }
+
     public function getTables()
     {
         $sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES ORDER BY TABLE_NAME ASC";
@@ -17,7 +22,7 @@ class MYSQLDatabaseRepository extends MYSQLDatabaseBaseRepository implements Dat
 
     public function getTotalTables(string $database): int
     {
-        $sql = "SELECT count(*) AS total_number_tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?";
+        $sql = "SELECT count(*) AS TOTAL_NUMBER_TABLES FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?";
 
         $sth = $this->getConnectionDB()->prepare($sql);
 
@@ -25,7 +30,7 @@ class MYSQLDatabaseRepository extends MYSQLDatabaseBaseRepository implements Dat
 
         $this->execute($sth);
 
-        return (int) $sth->fetchObject()->total_number_tables;
+        return (int) $sth->fetchObject()->TOTAL_NUMBER_TABLES;
     }
 
     public function dropDatabase(string $database): bool

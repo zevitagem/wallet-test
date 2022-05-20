@@ -4,45 +4,54 @@ namespace App\Infrastructure\Repositories\Database;
 
 use App\Infrastructure\Libraries\Database\DatabaseManager;
 use App\Infrastructure\Repositories\BaseRepository;
-//use app\models\AbstractModel;
+use App\Infrastructure\Exceptions\InfraException;
+use App\Infrastructure\Resources\DatabaseResource;
+use Throwable;
 
 abstract class DatabaseRepository extends BaseRepository
 {
-    protected $model;
+    abstract public function getEntityClass(): string;
+
+    public function getResourceClass(): string
+    {
+        return DatabaseResource::class;
+    }
 
     public function getConnectionDB()
     {
         return DatabaseManager::getConnection(DatabaseManager::getType());
     }
 
-//    public function setModel(AbstractModel $model)
-//    {
-//        $this->model = $model;
-//    }
-//
-//    public function getModel()
-//    {
-//        return $this->model;
-//    }
-//
-//    public function getClassModel()
-//    {
-//        return get_class($this->model);
-//    }
-
-    public function getTable()
+    protected function getTable(): string
     {
-        return $this->model::getTable();
+        $list = explode('\\', $this->getEntityClass());
+        end($list);
+
+        return strtolower(current($list));
     }
 
-    public function getPrimaryKey()
+    protected function getPrimaryKey(): string
     {
-        return $this->model::getPrimaryKey();
+        $const = $this->getEntityClass().'::PRIMARY_KEY';
+        if (defined($const)) {
+            return constant($const);
+        }
+
+        return 'id';
     }
 
-    public function newException($exc)
+    protected function getDeletedAtColumn(): string
     {
-        throw $exc;
+        $const = $this->getEntityClass().'::DELETED_AT';
+        if (defined($const)) {
+            return constant($const);
+        }
+
+        return 'deleted_at';
     }
 
+    protected function throwException(Throwable $exc)
+    {
+        throw new InfraException($exc->getMessage());
+    }
 }

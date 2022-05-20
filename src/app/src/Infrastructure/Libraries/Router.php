@@ -97,6 +97,11 @@ class Router
         $action    = $this->defineAction($levels);
         $preAction = $this->definePreAction($levels);
 
+        if ($preAction == 'public') {
+            $preAction = $action;
+            $action = 'index';
+        }
+
         return compact('action', 'preAction');
     }
 
@@ -104,10 +109,6 @@ class Router
     {
         $total     = count($levels);
         $preAction = $levels[$total - 2];
-
-        if ($preAction == 'public') {
-            $preAction = 'transaction';
-        }
 
         return $preAction;
     }

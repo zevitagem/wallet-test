@@ -18,16 +18,17 @@ class RestInputController extends BaseController
     {
         try {
 
-            $data = $this->getConfig();
+            $data           = $this->getConfig();
+            $controllerName = $this->getControllerName();
 
-            $className = ucfirst($data['preAction'])."Controller";
-            $file      = "../src/Infrastructure/Http/$className.php";
+            $className = $controllerName."Controller";
+            $file      = "../src/Infrastructure/Http/{$className}.php";
 
             if (!file_exists($file)) {
                 return $this->output->handle([
                         'status' => false,
                         'message' => sprintf('Could not resolve request with this controller sent: "%s"',
-                            $data['preAction'])
+                            $controllerName)
                 ]);
             }
 
@@ -44,6 +45,20 @@ class RestInputController extends BaseController
                 'status' => false,
                 'message' => json_decode($exc->getMessage())
             ]);
+        } catch (\Throwable $exc) {
+            $this->output->handle([
+                'status' => false,
+                'message' => $exc->getMessage()
+            ]);
         }
+    }
+
+    private function getControllerName(): string
+    {
+        $data = $this->getConfig();
+
+        $controller = $data['preAction'];
+
+        return ucfirst($controller);
     }
 }

@@ -11,18 +11,24 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
         $sql = "SELECT * FROM ".$this->getTable()." WHERE ".$this->getDeletedAtColumn()." IS NULL";
         $res = $this->getConnectionDB()->query($sql);
 
-        return $res->fetchAll(\PDO::FETCH_CLASS, $this->getClassModel());
+        return $res->fetchAll(\PDO::FETCH_CLASS, $this->getResourceClass());
     }
 
     public function getById(int $id)
     {
+        $primaryKey = $this->getPrimaryKey();
+
         $sql = "SELECT * FROM ".$this->getTable()." "
-            ."  WHERE ".$this->getPrimaryKey()." = $id "
+            ."  WHERE $primaryKey = ? "
             ."  LIMIT 1";
 
-        $res = $this->query($this->getConnectionDB(), $sql);
+        $sth = $this->getConnectionDB()->prepare($sql);
 
-        return $res->fetchObject($this->getClassModel());
+        $sth->bindParam(1, $id, \PDO::PARAM_INT);
+
+        $this->execute($sth);
+
+        return $sth->fetchObject($this->getResourceClass());
     }
 
     public function deleteById(int $id)
@@ -110,36 +116,5 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
         }
 
         return $this->execute($sth);
-    }
-
-    public function getColumnsObject()
-    {
-        $sth = $this->getConnectionDB()->prepare("DESCRIBE ".$this->getTable());
-
-        $this->execute($sth);
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function showColumns(string $table = '')
-    {
-        if (empty($table)) {
-            $table = $this->getTable();
-        }
-
-        switch (PDOConnection::getType()) {
-            case OPTION_TYPE_DB_MYSQL:
-                $sql = "SHOW COLUMNS FROM ".$table;
-                break;
-            case OPTION_TYPE_DB_SQLSERVER:
-                $sql = "SELECT COLUMN_NAME AS 'Field' FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME= '".$table."'";
-                break;
-        }
-
-        $sth = $this->getConnectionDB()->prepare($sql);
-
-        $this->execute($sth);
-
-        return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

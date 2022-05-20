@@ -3,20 +3,27 @@
 namespace App\Infrastructure\Http;
 
 use App\Infrastructure\Http\BaseController;
-use App\Application\Services\TransactionService;
+use App\Application\Services\AccountService;
 
-class TransactionController extends BaseController
+class BalanceController extends BaseController
 {
     public function __construct()
     {
-        $this->setService(new TransactionService());
+        $this->setService(new AccountService());
+    }
+
+    public function index()
+    {
+        $this->mustGet();
+
+        $this->getService()->find($_GET['account_id'] ?? 0);
     }
 
     public function handleGet()
     {
         $this->mustGet();
 
-        echo 'get';
+        echo 'balance get';
     }
 
     public function handlePost()

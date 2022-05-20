@@ -1,14 +1,11 @@
 <?php
 
-function hasPrintDebug()
+function hasPrintDebug(): bool
 {
-    return (
-        isset($_SERVER['HTTP_REFERER']) &&
-        strpos($_SERVER['HTTP_REFERER'], 'printDebug=1')
-    );
+    return (isset($_GET['printDebug']) && $_GET['printDebug'] == 1);
 }
 
-function dd($data, $print = false, $exit = true)
+function dd($data, $print = false, $exit = true): void
 {
     echo '<pre>';
     ($print) ? print_r($data) : var_dump($data);
@@ -19,7 +16,7 @@ function dd($data, $print = false, $exit = true)
     }
 }
 
-function env($key)
+function env($key): mixed
 {
     $envs = parse_ini_file('../.env');
 
