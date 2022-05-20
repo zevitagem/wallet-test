@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Infrastructure\Repositories;
+namespace App\Infrastructure\Repositories\Database\MYSQL;
 
-use App\Infrastructure\Repositories\AbstractCrudRepository;
+use App\Infrastructure\Repositories\Database\MYSQL\MYSQLDatabaseBaseRepository;
+use App\Infrastructure\Contracts\Repositories\DatabaseLevelInterface;
 
-class DatabaseRepository extends AbstractCrudRepository
+class MYSQLDatabaseRepository extends MYSQLDatabaseBaseRepository implements DatabaseLevelInterface
 {
     public function getTables()
     {
@@ -22,7 +23,7 @@ class DatabaseRepository extends AbstractCrudRepository
 
         $sth->bindParam(1, $database, \PDO::PARAM_STR);
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return (int) $sth->fetchObject()->total_number_tables;
     }
@@ -33,7 +34,7 @@ class DatabaseRepository extends AbstractCrudRepository
 
         $sth = $this->getConnectionDB()->prepare($sql);
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return true;
     }
@@ -44,7 +45,7 @@ class DatabaseRepository extends AbstractCrudRepository
 
         $sth = $this->getConnectionDB()->prepare($sql);
 
-        $this->_execute($sth);
+        $this->execute($sth);
 
         return true;
     }

@@ -2,11 +2,12 @@
 
 namespace App\Infrastructure\Libraries\Migration;
 
-use App\Infrastructure\Repositories\DatabaseRepository;
 use App\Infrastructure\Contracts\Adapter\Database\SimpleDatabaseInterface;
 use App\Infrastructure\Libraries\Migration\MigrationFiller;
 use App\Infrastructure\Libraries\Migration\MigrationReseter;
 use \App\Infrastructure\Traits\AvailabilityWithDependencie;
+use App\Infrastructure\Factory\DatabaseRepositoryFactory;
+use App\Infrastructure\Contracts\Repositories\DatabaseLevelInterface;
 
 class MigrationManager
 {
@@ -19,7 +20,6 @@ class MigrationManager
     )
     {
         $this->connection         = $conector->getConnection();
-        $this->databaseRepository = new DatabaseRepository();
 
         $this->setDependencie('filler', new MigrationFiller($this));
         $this->setDependencie('reseter', new MigrationReseter($this));
@@ -30,9 +30,9 @@ class MigrationManager
         return $this->database;
     }
 
-    public function getRepository(): DatabaseRepository
+    public function getRepository(): DatabaseLevelInterface
     {
-        return $this->databaseRepository;
+        return DatabaseRepositoryFactory::newDatabase($this->getConnectionType());
     }
 
     public function getConnectionType(): string
