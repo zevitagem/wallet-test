@@ -8,16 +8,14 @@ use App\Application\Validators\TransactionValidator;
 use App\Application\Handlers\TransactionHandler;
 use App\Application\DTO\TransactionDTO;
 use App\Application\Services\AccountService;
-use App\Application\UseCases\DepositUseCase;
-use App\Application\UseCases\WithdrawUseCase;
-use App\Domain\Entity\Transaction;
+use App\Application\Factory\TransactionStrategyFactory;
+use App\Domain\Contracts\TransactionUseCaseInterface;
+use RuntimeException;
 
 class TransactionService extends BaseCrudService
 {
     public function __construct()
     {
-        //parent::__construct();
-
         parent::setRepository(new TransactionRepository());
         parent::setHandler(new TransactionHandler());
         parent::setValidator(new TransactionValidator());
@@ -31,38 +29,42 @@ class TransactionService extends BaseCrudService
         $dto = TransactionDTO::fromArray($data);
         parent::validate($dto, __FUNCTION__);
 
-        $entity         = $dto->toDomain();
-        //$repository     = $this->getRepository();
-        //$accountService = $this->getDependencie('account_service');
+        $entity   = $dto->toDomain();
+        $strategy = null;
 
         if ($entity->isDeposit()) {
-            return $this->handleDeposit($entity);
+            $strategy = $this->getDepositStrategy($entity);
         }
-
         if ($entity->isWithdraw()) {
-            return $this->handleWithdraw($entity);
+            $strategy = $this->getWithdrawStrategy($entity);
         }
-    }
+        if ($entity->isTransfer()) {
+            $strategy = $this->getTransferStrategy($entity);
+        }
+        if (!($strategy instanceof TransactionUseCaseInterface)) {
+            throw new RuntimeException('Unable to define a transaction processing strategy');
+        }
 
-    private function handleDeposit(Transaction $transaction)
-    {
-        $useCase = new DepositUseCase();
-        $useCase->setDependencie(
+        $strategy->setDependencie(
             'account_service', $this->getDependencie('account_service'));
-        $useCase->setDependencie(
+        $strategy->setDependencie(
             'transaction_repository', $this->getRepository());
 
-        return $useCase->handle($transaction);
+        return $strategy->handle($entity);
     }
 
-    private function handleWithdraw(Transaction $transaction)
+    private function getDepositStrategy()
     {
-        $useCase = new WithdrawUseCase();
-        $useCase->setDependencie(
-            'account_service', $this->getDependencie('account_service'));
-        $useCase->setDependencie(
-            'transaction_repository', $this->getRepository());
+        return TransactionStrategyFactory::deposit();
+    }
 
-        return $useCase->handle($transaction);
+    private function getWithdrawStrategy()
+    {
+        return TransactionStrategyFactory::withdraw();
+    }
+
+    private function getTransferStrategy()
+    {
+        return TransactionStrategyFactory::transfer();
     }
 }

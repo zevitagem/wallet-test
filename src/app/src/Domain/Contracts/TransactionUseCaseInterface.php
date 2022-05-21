@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\Contracts;
+namespace App\Domain\Contracts;
 
-use App\Application\UseCases\UseCaseResponse;
+use App\Domain\UseCases\UseCaseResponse;
 use App\Domain\Entity\Transaction;
-use App\Application\Contracts\UseCaseInterface;
+use App\Domain\Contracts\UseCaseInterface;
 
 interface TransactionUseCaseInterface extends UseCaseInterface
 {

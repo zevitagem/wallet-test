@@ -12,8 +12,8 @@ class Transaction extends BaseEntity
 
     public function __construct(
         string $type,
-        int $origin,
-        int $destination,
+        ?int $origin,
+        ?int $destination,
         int $amount,
         public string $created_at
     )

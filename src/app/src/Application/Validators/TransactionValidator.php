@@ -22,14 +22,41 @@ class TransactionValidator extends BaseValidator
     {
         $data = $this->getData()->toArray();
 
-        if (!$this->validateRequired($data)) {
+        $this->validateDefault($data);
+    }
+
+    public function save()
+    {
+        $data = $this->getData()->toArray();
+
+        $this->validateDefault($data);
+    }
+
+    private function validateDefault(array $data)
+    {
+        $keys = [];
+        if (isset($data['type'])) {
+            switch ($data['type']) {
+                case TransactionTypeEnum::DEPOSIT:
+                    $keys = ['destination', 'amount'];
+                    break;
+                case TransactionTypeEnum::TRANSFER:
+                    $keys = ['destination', 'origin', 'amount'];
+                    break;
+                case TransactionTypeEnum::WITHDRAW:
+                    $keys = ['origin', 'amount'];
+                    break;
+            }
+        }
+
+        if (!$this->validateRequired($data, $keys)) {
             return;
         }
 
-        $this->validateInvalid($data);
+        $this->validateInvalid($data, $keys);
     }
 
-    private function validateInvalid(array $data): void
+    private function validateInvalid(array $data, array $keys): void
     {
         if (!in_array($data['type'],
                 [
@@ -42,30 +69,23 @@ class TransactionValidator extends BaseValidator
             $this->addError('invalid_type');
         }
 
-        if (!is_numeric($data['amount']) || $data['amount'] <= 0) {
-            $this->addError('invalid_amount');
-        }
-        if (!is_numeric($data['origin']) || $data['origin'] <= 0) {
-            $this->addError('invalid_origin');
-        }
-        if (!is_numeric($data['destination']) || $data['destination'] <= 0) {
-            $this->addError('invalid_destination');
+        foreach ($keys as $key) {
+            if (!is_numeric($data[$key]) || $data[$key] <= 0) {
+                $this->addError('invalid_'.$key);
+            }
         }
     }
 
-    private function validateRequired(array $data): bool
+    private function validateRequired(array $data, array $keys): bool
     {
         if (!isset($data['type'])) {
             $this->addError('required_type');
         }
-        if (!isset($data['amount'])) {
-            $this->addError('required_amount');
-        }
-        if (!isset($data['origin'])) {
-            $this->addError('required_origin');
-        }
-        if (!isset($data['destination'])) {
-            $this->addError('required_destination');
+
+        foreach ($keys as $key) {
+            if (!isset($data[$key])) {
+                $this->addError('required_'.$key);
+            }
         }
 
         return empty($this->getErrors());

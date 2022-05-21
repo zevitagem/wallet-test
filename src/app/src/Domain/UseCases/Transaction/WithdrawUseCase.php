@@ -1,22 +1,16 @@
 <?php
 
-namespace App\Application\UseCases;
+namespace App\Domain\UseCases\Transaction;
 
 use App\Domain\Entity\Transaction;
 use Throwable;
 use App\Domain\Entity\Account;
-use App\Application\UseCases\UseCaseResponse;
-use App\Application\UseCases\BaseUseCase;
-use App\Application\Contracts\TransactionUseCaseInterface;
+use App\Domain\UseCases\UseCaseResponse;
 use InvalidArgumentException;
+use App\Domain\UseCases\Transaction\BaseTransactionUseCase;
 
-class WithdrawUseCase extends BaseUseCase implements TransactionUseCaseInterface
+class WithdrawUseCase extends BaseTransactionUseCase
 {
-    public function getDependencieKeysRequired(): array
-    {
-        return ['account_service', 'transaction_repository'];
-    }
-
     public function handle(Transaction $transaction): UseCaseResponse
     {
         $this->checkDependencies();
@@ -47,25 +41,24 @@ class WithdrawUseCase extends BaseUseCase implements TransactionUseCaseInterface
         Transaction $transaction, Account $account
     ): UseCaseResponse
     {
-        if ($transaction->getAmount() > $account->getBalance()) {
+        $amount  = $transaction->getAmount();
+        $balance = $account->getBalance();
+
+        if ($amount > $balance) {
             throw new InvalidArgumentException(
-                'The amount requested for withdrawal is greater than available'
+                    'The amount requested for withdrawal is greater than available'
             );
         }
 
-        $account->decrement($transaction->getAmount());
+        $account->decrement($amount);
 
-        $accountData = $account->toArray();
-        unset($accountData['created_at'], $accountData['deleted_at']);
+        parent::updateAccount($account);
 
-        $accountService = $this->getDependencie('account_service');
-        $accountService->updateById($account->getId(), $accountData);
-
-        return $this->end(true,
+        return parent::end(true,
             [
                 'origin' => [
                     'id' => $account->getId(),
-                    'balance' => $account->getBalance()
+                    'balance' => $balance
                 ]
             ]
         );

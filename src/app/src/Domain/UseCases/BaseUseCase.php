@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Application\UseCases;
+namespace App\Domain\UseCases;
 
 use App\Infrastructure\Traits\AvailabilityWithDependencie;
 use RuntimeException;
-use App\Application\UseCases\UseCaseResponse;
-use App\Application\Contracts\UseCaseInterface;
+use App\Domain\UseCases\UseCaseResponse;
+use App\Domain\Contracts\UseCaseInterface;
 
 abstract class BaseUseCase implements UseCaseInterface
 {

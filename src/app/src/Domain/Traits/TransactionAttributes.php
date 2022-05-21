@@ -5,16 +5,16 @@ namespace App\Domain\Traits;
 trait TransactionAttributes
 {
     public string $type;
-    public int $origin;
-    public int $destination;
+    public ?int $origin = null;
+    public ?int $destination = null;
     public int $amount;
 
-    public function getOrigin(): int
+    public function getOrigin(): ?int
     {
         return $this->origin;
     }
 
-    public function getDestination(): int
+    public function getDestination(): ?int
     {
         return $this->destination;
     }

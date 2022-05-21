@@ -1,22 +1,16 @@
 <?php
 
-namespace App\Application\UseCases;
+namespace App\Domain\UseCases\Transaction;
 
 use App\Domain\Entity\Transaction;
 use App\Application\Exceptions\ResourceNotFoundException;
 use Throwable;
 use App\Domain\Entity\Account;
-use App\Application\UseCases\UseCaseResponse;
-use App\Application\UseCases\BaseUseCase;
-use App\Application\Contracts\TransactionUseCaseInterface;
+use App\Domain\UseCases\UseCaseResponse;
+use App\Domain\UseCases\Transaction\BaseTransactionUseCase;
 
-class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
+class DepositUseCase extends BaseTransactionUseCase
 {
-    public function getDependencieKeysRequired(): array
-    {
-        return ['account_service', 'transaction_repository'];
-    }
-
     public function handle(Transaction $transaction): UseCaseResponse
     {
         $this->checkDependencies();
@@ -56,14 +50,10 @@ class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
     ): UseCaseResponse
     {
         $account->sum($transaction->getAmount());
-        
-        $accountData = $account->toArray();
-        unset($accountData['created_at'], $accountData['deleted_at']);
 
-        $accountService = $this->getDependencie('account_service');
-        $accountService->updateById($account->getId(), $accountData);
+        parent::updateAccount($account);
 
-        return $this->end(true,
+        return parent::end(true,
             [
                 'destination' => [
                     'id' => $account->getId(),
@@ -77,17 +67,20 @@ class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
         Transaction $transaction
     ): UseCaseResponse
     {
+        $amount      = $transaction->getAmount();
+        $destination = $transaction->getDestination();
+
         $accountService = $this->getDependencie('account_service');
         $accountService->store([
-            'balance' => $transaction->getAmount(),
-            'id' => $transaction->getDestination()
+            'balance' => $amount,
+            'id' => $destination
         ]);
 
-        return $this->end(true,
+        return parent::end(true,
             [
                 'destination' => [
-                    'id' => $transaction->getDestination(),
-                    'balance' => $transaction->getAmount()
+                    'id' => $destination,
+                    'balance' => $amount
                 ]
             ]
         );
