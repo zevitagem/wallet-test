@@ -8,7 +8,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 {
     public function getValidObjects()
     {
-        $sql = "SELECT * FROM ".$this->getTable()." WHERE ".$this->getDeletedAtColumn()." IS NULL";
+        $sql = "SELECT * FROM {$this->getTable()} WHERE {$this->getDeletedAtColumn()} IS NULL";
         $res = $this->getConnectionDB()->query($sql);
 
         return $res->fetchAll(\PDO::FETCH_CLASS, $this->getResourceClass());
@@ -19,7 +19,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
         $primaryKey = $this->getPrimaryKey();
 
         $sql = "SELECT * FROM ".$this->getTable()." "
-            ."  WHERE $primaryKey = ? "
+            ."  WHERE $primaryKey = ? AND {$this->getDeletedAtColumn()} IS NULL "
             ."  LIMIT 1";
 
         $sth = $this->getConnectionDB()->prepare($sql);
