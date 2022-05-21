@@ -6,6 +6,7 @@ use App\Application\DTO\DTO;
 use App\Domain\Traits\TransactionAttributes;
 use App\Domain\Contracts\EntityInterface;
 use App\Domain\Entity\Transaction;
+use DateTime;
 
 class TransactionDTO extends DTO
 {
@@ -17,7 +18,8 @@ class TransactionDTO extends DTO
             $this->getType(),
             $this->getOrigin(),
             $this->getDestination(),
-            $this->getAmount()
+            $this->getAmount(),
+            (new DateTime())->format('Y-m-d H:i:s')
         );
     }
 }

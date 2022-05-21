@@ -4,22 +4,23 @@ declare(strict_types=1);
 namespace App\Domain\Entity;
 
 use App\Domain\Contracts\EntityInterface;
+use App\Domain\Traits\AccountAttributes;
 
 class Account implements EntityInterface
 {
+    use AccountAttributes;
+    
     public function __construct(
-        public int $id,
-        public string $name,
-        public int $balance,
+        int $id,
+        string $name,
+        int $balance,
         public string $created_at,
         public ?string $deleted_at
     )
     {
-    }
-
-    public function getBalance(): int
-    {
-        return $this->balance;
+        $this->id = $id;
+        $this->name = $name;
+        $this->balance = $balance;
     }
 
     public static function fromArray(array $array): self

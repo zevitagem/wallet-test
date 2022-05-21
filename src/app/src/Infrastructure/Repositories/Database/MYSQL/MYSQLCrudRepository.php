@@ -95,8 +95,9 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 
         $this->execute($sth);
 
-        return ($sth->rowCount() > 0) ? $this->getConnectionDB()->lastInsertId()
-                : false;
+        return ($sth->rowCount() > 0)
+            ? $this->getConnectionDB()->lastInsertId()
+            : false;
     }
 
     public function updateById(int $id, array $data)

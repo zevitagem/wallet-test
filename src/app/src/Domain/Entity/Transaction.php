@@ -11,7 +11,11 @@ class Transaction implements EntityInterface
     use TransactionAttributes;
 
     public function __construct(
-        string $type, int $origin, int $destination, int $amount
+        string $type,
+        int $origin,
+        int $destination,
+        int $amount,
+        public string $created_at
     )
     {
         $this->type        = $type;
@@ -26,7 +30,8 @@ class Transaction implements EntityInterface
             $array['type'],
             $array['origin'],
             $array['destination'],
-            $array['amount']
+            $array['amount'],
+            $array['created_at']
         );
     }
 }

@@ -3,9 +3,25 @@
 namespace App\Infrastructure\Repositories\Database\MYSQL;
 
 use App\Infrastructure\Repositories\Database\DatabaseRepository;
+use App\Infrastructure\Contracts\Repositories\ReversibleInterface;
 
-abstract class MYSQLDatabaseBaseRepository extends DatabaseRepository
+abstract class MYSQLDatabaseBaseRepository extends DatabaseRepository implements ReversibleInterface
 {
+    public function beginTransaction(): void
+    {
+        $this->getConnectionDB()->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->getConnectionDB()->commit();
+    }
+
+    public function rollBack(): void
+    {
+        $this->getConnectionDB()->rollBack();
+    }
+
     protected function query($connection, string $sql)
     {
         try {

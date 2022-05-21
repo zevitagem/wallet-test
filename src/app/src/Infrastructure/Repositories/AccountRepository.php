@@ -16,4 +16,13 @@ class AccountRepository extends MYSQLCRUDRepository
     {
         return parent::getById($id);
     }
+
+    public function storeAccount(Account $account)
+    {
+        return parent::store([
+            'id' => $account->getId(),
+            'name' => $account->getName(),
+            'balance' => $account->getBalance()
+        ]);
+    }
 }
