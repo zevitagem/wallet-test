@@ -17,6 +17,11 @@ class Account implements EntityInterface
     {
     }
 
+    public function getBalance(): int
+    {
+        return $this->balance;
+    }
+
     public static function fromArray(array $array): self
     {
         return new self(

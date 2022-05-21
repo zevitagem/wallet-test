@@ -6,7 +6,7 @@ use App\Application\Services\BaseService;
 
 abstract class BaseCrudService extends BaseService
 {
-    public function getById(int $id)
+    public function find(int $id)
     {
         return $this->repository->getById($id);
     }

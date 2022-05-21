@@ -11,6 +11,7 @@ use App\Infrastructure\Traits\Configurable;
 use App\Infrastructure\Libraries\Router;
 use App\Infrastructure\Http\BaseController;
 use App\Application\Exceptions\ValidatorException;
+use App\Application\Exceptions\ResourceNotFoundException;
 
 class RestInputController extends BaseController
 {
@@ -41,11 +42,19 @@ class RestInputController extends BaseController
             $router->handle();
             
         } catch (ValidatorException $exc) {
+
             $this->output->handle([
                 'status' => false,
                 'message' => json_decode($exc->getMessage())
             ]);
+            
+        } catch (ResourceNotFoundException $exc) {
+
+            $this->output->header(404);
+            echo $exc->getMessage();
+
         } catch (\Throwable $exc) {
+
             $this->output->handle([
                 'status' => false,
                 'message' => $exc->getMessage()

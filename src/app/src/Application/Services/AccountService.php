@@ -4,6 +4,9 @@ namespace App\Application\Services;
 
 use App\Application\Services\BaseCrudService;
 use App\Infrastructure\Repositories\AccountRepository;
+use App\Application\Factory\EntityFromResourceFactory;
+use App\Application\Exceptions\ResourceNotFoundException;
+use App\Domain\Enum\ErrorsEnum;
 
 class AccountService extends BaseCrudService
 {
@@ -15,8 +18,11 @@ class AccountService extends BaseCrudService
     public function find(int $id)
     {
         $result = $this->getRepository()->getAccount($id);
-        //$result = $this->getRepository()->getValidObjects();
 
-        dd($result);
+        if (!empty($result)) {
+            return EntityFromResourceFactory::account($result);
+        }
+
+        throw new ResourceNotFoundException(ErrorsEnum::EMPTY_VALUE);
     }
 }

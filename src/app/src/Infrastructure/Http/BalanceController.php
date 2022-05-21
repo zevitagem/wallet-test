@@ -9,6 +9,8 @@ class BalanceController extends BaseController
 {
     public function __construct()
     {
+        parent::__construct();
+
         $this->setService(new AccountService());
     }
 
@@ -16,20 +18,9 @@ class BalanceController extends BaseController
     {
         $this->mustGet();
 
-        $this->getService()->find($_GET['account_id'] ?? 0);
-    }
+        $result = $this->getService()->find($_GET['account_id'] ?? 0);
 
-    public function handleGet()
-    {
-        $this->mustGet();
-
-        echo 'balance get';
-    }
-
-    public function handlePost()
-    {
-        $this->mustPost();
-
-        $this->getService()->store($_POST);
+        $this->output->header(200);
+        echo $result->getBalance();
     }
 }
