@@ -8,8 +8,8 @@ use App\Application\Validators\TransactionValidator;
 use App\Application\Handlers\TransactionHandler;
 use App\Application\DTO\TransactionDTO;
 use App\Application\Services\AccountService;
-use App\Application\Exceptions\ResourceNotFoundException;
-use Throwable;
+use App\Application\UseCases\DepositUseCase;
+use App\Domain\Entity\Transaction;
 
 class TransactionService extends BaseCrudService
 {
@@ -31,42 +31,22 @@ class TransactionService extends BaseCrudService
         parent::validate($dto, __FUNCTION__);
 
         $entity         = $dto->toDomain();
-        $repository     = $this->getRepository();
-        $accountService = $this->getDependencie('account_service');
+        //$repository     = $this->getRepository();
+        //$accountService = $this->getDependencie('account_service');
 
         if ($entity->isDeposit()) {
-            return $this->handleDeposit();
-        }
-
-        try {
-            $account = $accountService->find($entity->getDestination());
-        } catch (ResourceNotFoundException $exc) {
-            $account = null;
-        }
-
-        if (empty($account)) {
-
-            $repository->beginTransaction();
-
-            try {
-                $accountId = $accountService->store([
-                    'balance' => $entity->getAmount(),
-                    'id' => $entity->getDestination()
-                ]);
-
-                $repository->storeTransaction($entity);
-                $repository->commit();
-            } catch (Throwable $exc) {
-                echo $exc->getMessage();
-                $repository->rollBack();
-            }
-
-            dd($accountId);
+            return $this->handleDeposit($entity);
         }
     }
 
-    private function handleDeposit()
+    private function handleDeposit(Transaction $transaction)
     {
-        // implementar classe responsável pelo depósito
+        $useCase = new DepositUseCase();
+        $useCase->setDependencie(
+            'account_service', $this->getDependencie('account_service'));
+        $useCase->setDependencie(
+            'transaction_repository', $this->getRepository());
+
+        return $useCase->handle($transaction);
     }
 }

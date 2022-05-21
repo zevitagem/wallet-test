@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Contracts\EntityInterface;
 use App\Domain\Traits\AccountAttributes;
+use App\Domain\Entity\BaseEntity;
 
-class Account implements EntityInterface
+class Account extends BaseEntity
 {
     use AccountAttributes;
     
@@ -21,6 +21,11 @@ class Account implements EntityInterface
         $this->id = $id;
         $this->name = $name;
         $this->balance = $balance;
+    }
+
+    public function sum(int $value): void
+    {
+        $this->balance += $value;
     }
 
     public static function fromArray(array $array): self

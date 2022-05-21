@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Contracts\EntityInterface;
 use App\Domain\Traits\TransactionAttributes;
+use App\Domain\Entity\BaseEntity;
 
-class Transaction implements EntityInterface
+class Transaction extends BaseEntity
 {
     use TransactionAttributes;
 

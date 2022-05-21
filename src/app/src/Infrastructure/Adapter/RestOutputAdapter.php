@@ -12,9 +12,9 @@ class RestOutputAdapter implements OutputAdapterInterface
         http_response_code($httpCode);
     }
 
-    public function handle(array $data)
+    public function handle(array $data, int $httpCode = 200)
     {
-        $this->header(200);
+        $this->header($httpCode);
 
         echo json_encode($data);
     }

@@ -39,4 +39,13 @@ class AccountService extends BaseCrudService
 
         return $this->getRepository()->storeAccount($dto->toDomain());
     }
+
+    public function updateById(int $id, array $data)
+    {
+        parent::handle($data, __FUNCTION__);
+        $dto = AccountDTO::fromArray($data);
+        parent::validate($dto, __FUNCTION__);
+
+        return $this->getRepository()->updateAccount($dto->toDomain());
+    }
 }

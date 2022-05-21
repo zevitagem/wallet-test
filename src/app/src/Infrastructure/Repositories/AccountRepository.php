@@ -25,4 +25,13 @@ class AccountRepository extends MYSQLCRUDRepository
             'balance' => $account->getBalance()
         ]);
     }
+
+    public function updateAccount(Account $account)
+    {
+        return parent::updateById($account->getId(), [
+            //'id' => $account->getId(),
+            //'name' => $account->getName(),
+            'balance' => $account->getBalance()
+        ]);
+    }
 }
