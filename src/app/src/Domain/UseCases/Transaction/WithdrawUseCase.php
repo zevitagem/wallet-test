@@ -42,9 +42,8 @@ class WithdrawUseCase extends BaseTransactionUseCase
     ): UseCaseResponse
     {
         $amount  = $transaction->getAmount();
-        $balance = $account->getBalance();
 
-        if ($amount > $balance) {
+        if ($amount > $account->getBalance()) {
             throw new InvalidArgumentException(
                     'The amount requested for withdrawal is greater than available'
             );
@@ -58,7 +57,7 @@ class WithdrawUseCase extends BaseTransactionUseCase
             [
                 'origin' => [
                     'id' => $account->getId(),
-                    'balance' => $balance
+                    'balance' => $account->getBalance()
                 ]
             ]
         );

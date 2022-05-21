@@ -25,7 +25,7 @@ class DepositUseCase extends BaseTransactionUseCase
 
         $transactionRepository = $this->getDependencie('transaction_repository');
         $transactionRepository->beginTransaction();
-
+        
         try {
             if (empty($account)) {
                 $result = $this->handleWithNonExistentDestination($transaction);

@@ -7,7 +7,7 @@ use App\Infrastructure\Contracts\ProviderInterface;
 
 class BootstrapProvider implements ProviderInterface
 {
-    public static function boot(): void
+    public static function boot()
     {
         foreach ([
             DatabaseProvider::class

@@ -23,7 +23,7 @@ class TransactionService extends BaseCrudService
         $this->setDependencie('account_service', new AccountService());
     }
 
-    public function save(array $data)
+    public function store(array $data)
     {
         parent::handle($data, __FUNCTION__);
         $dto = TransactionDTO::fromArray($data);

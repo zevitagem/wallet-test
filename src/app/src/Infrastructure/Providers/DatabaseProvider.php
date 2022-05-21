@@ -7,9 +7,15 @@ use App\Infrastructure\Contracts\ProviderInterface;
 
 class DatabaseProvider implements ProviderInterface
 {
-    public static function boot(): void
+    public static function boot()
     {
-        define('TYPE_DB', 'MYSQL');
+        if (!defined('TYPE_DB')) {
+            define('TYPE_DB', 'MYSQL');
+        }
+
+        DatabaseManager::reset(TYPE_DB);
         DatabaseManager::connect(TYPE_DB);
+
+        return DatabaseManager::getByType(TYPE_DB);
     }
 }

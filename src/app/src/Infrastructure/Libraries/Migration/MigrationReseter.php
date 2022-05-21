@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Libraries\Migration;
 
 use App\Infrastructure\Libraries\Migration\MigrationAction;
+use App\Infrastructure\Providers\DatabaseProvider;
 
 class MigrationReseter extends MigrationAction
 {
@@ -12,14 +13,20 @@ class MigrationReseter extends MigrationAction
         $repository = $manager->getRepository();
         $database   = $manager->getDatabase();
 
-        $dropResult   = $repository->dropDatabase($database);
-        $createResult = false;
-
-        if ($dropResult) {
-            $createResult = $repository->createDatabase($database);
+        $dropResult = $repository->dropDatabase($database);
+        if (!$dropResult) {
+            return false;
         }
 
-        return ($dropResult && $createResult);
+        $createResult = $repository->createDatabase($database);
+        if (!$createResult) {
+            return false;
+        }
+
+        $databaseBoot = DatabaseProvider::boot();
+        $manager->setConnection($databaseBoot['class']);
+
+        return $manager->fill();
     }
 
     public function can(): bool

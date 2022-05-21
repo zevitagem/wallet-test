@@ -16,4 +16,9 @@ trait Configurable
     {
         return $this->config;
     }
+
+    public function isValidConfig($key): bool
+    {
+        return (!empty($this->config[$key]));
+    }
 }

@@ -13,12 +13,15 @@ use App\Infrastructure\Traits\Configurable;
 abstract class DatabaseCommand implements InputAdapterInterface
 {
     use Configurable;
-    
+
     abstract public function getStrategy(): string;
-    
+
     public function __construct()
     {
         $this->setOutputAdapter(new StdoutOutputAdapter());
+        $this->configure([
+            'print_output' => true
+        ]);
     }
 
     public function setOutputAdapter(OutputAdapterInterface $output)
@@ -28,7 +31,8 @@ abstract class DatabaseCommand implements InputAdapterInterface
 
     public function handle()
     {
-        $status = false;
+        $status         = false;
+        $canPrintOutput = $this->isValidConfig('print_output');
 
         $type      = DatabaseManager::getType();
         $info      = DatabaseManager::getByType($type);
@@ -37,20 +41,25 @@ abstract class DatabaseCommand implements InputAdapterInterface
         try {
 
             $strategy = $this->getStrategy();
-
-            $result = (new MigrationManager(
+            $manager = new MigrationManager(
                 $connector, $connector->getConfig()['DATABASE'], $type
-            ))->{$strategy}();
+            );
+
+            $manager->configure(['print_output' => $canPrintOutput]);
+            $result = $manager->{$strategy}();
 
             $status  = (!empty($result));
-            $message = ($result) 
-                ? 'Operation executed successfully!'
-                : 'An error occurred during processing, please try again';
-
+            $message = ($result) ? 'Operation executed successfully!' : 'An error occurred during processing, please try again';
         } catch (Throwable $exc) {
             $message = $exc->getMessage();
         }
 
-        $this->output->handle(compact('status', 'message'));
+        $toOutput = compact('status', 'message');
+
+        if ($canPrintOutput) {
+            $this->output->handle($toOutput);
+        }
+
+        return $toOutput;
     }
 }

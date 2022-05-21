@@ -2,12 +2,6 @@
 
 namespace App\Infrastructure\Http;
 
-use App\Infrastructure\Contracts\InputAdapterInterface;
-use App\Infrastructure\Traits\HTTPVerbs;
-use App\Infrastructure\Command\DatabaseResetCommand;
-use App\Infrastructure\Adapter\RestOutputAdapter;
-use App\Infrastructure\Contracts\OutputAdapterInterface;
-use App\Infrastructure\Traits\Configurable;
 use App\Infrastructure\Libraries\Router;
 use App\Infrastructure\Http\BaseController;
 use App\Application\Exceptions\ValidatorException;
@@ -46,11 +40,12 @@ class RestInputController extends BaseController
             $this->output->handle([
                 'status' => false,
                 'message' => json_decode($exc->getMessage())
-            ]);
+            ], 500);
             
         } catch (ResourceNotFoundException $exc) {
-
-            $this->output->header(404);
+            
+            $this->output->header();
+            $this->output->httpCode(404);
             echo $exc->getMessage();
 
         } catch (\Throwable $exc) {
@@ -58,7 +53,7 @@ class RestInputController extends BaseController
             $this->output->handle([
                 'status' => false,
                 'message' => $exc->getMessage()
-            ]);
+            ], 500);
         }
     }
 

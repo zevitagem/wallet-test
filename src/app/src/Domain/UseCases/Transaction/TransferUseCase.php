@@ -54,11 +54,13 @@ class TransferUseCase extends BaseTransactionUseCase
             );
         }
 
-        $originAccount->decrement($amount);
-        $destinationAccount->sum($amount);
+        if ($originAccount->getId() != $destinationAccount->getId()) {
+            $originAccount->decrement($amount);
+            $destinationAccount->sum($amount);
 
-        parent::updateAccount($originAccount);
-        parent::updateAccount($destinationAccount);
+            parent::updateAccount($originAccount);
+            parent::updateAccount($destinationAccount);
+        }
 
         return parent::end(true,
             [

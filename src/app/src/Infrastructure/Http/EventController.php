@@ -7,7 +7,6 @@ use App\Application\Services\TransactionService;
 
 class EventController extends BaseController
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -19,7 +18,7 @@ class EventController extends BaseController
     {
         $this->mustPost();
 
-        $response = $this->getService()->save($_POST);
+        $response = $this->getService()->store($_POST);
         $content = $response->getContent();
 
         if ($response->isSuccessfully()) {

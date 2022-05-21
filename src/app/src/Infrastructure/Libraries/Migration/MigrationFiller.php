@@ -25,7 +25,7 @@ class MigrationFiller extends MigrationAction
                 continue;
             }
 
-            echo 'Processing:'.$row.PHP_EOL;
+            $this->out('Processing:'.$row);
             foreach ($queries as $query) {
                 $connection->query($query);
             }
@@ -53,7 +53,7 @@ class MigrationFiller extends MigrationAction
         $connectionType = $this->getManager()->getConnectionType();
         
         return array_filter(array_map(function ($file) use ($connectionType) {
-            $path = "../src/Infrastructure/Migrations/Database/{$connectionType}/{$file}";
+            $path = "../database/{$connectionType}/{$file}";
             return (file_exists($path)) ? $path : null;
         }, $this->files));
     }

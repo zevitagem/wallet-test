@@ -7,8 +7,15 @@ use Throwable;
 
 class DatabaseManager
 {
-    private static array $connection;
-    private static string $lastType = '';
+    private static array $connection = [];
+    private static string $lastType  = '';
+
+    public static function reset(string $type): void
+    {
+        if (isset(self::$connection[$type])) {
+            self::$connection[$type] = null;
+        }
+    }
 
     public static function connect(string $type = '')
     {
@@ -25,8 +32,8 @@ class DatabaseManager
             $class->connect($class->getConfig());
             $connection = $class->getConnection();
         } catch (Throwable $e) {
-            $connection     = null;
-            $class          = null;
+            $connection = null;
+            $class      = null;
 
             throw $e;
         } finally {
