@@ -9,6 +9,7 @@ use App\Application\Handlers\TransactionHandler;
 use App\Application\DTO\TransactionDTO;
 use App\Application\Services\AccountService;
 use App\Application\UseCases\DepositUseCase;
+use App\Application\UseCases\WithdrawUseCase;
 use App\Domain\Entity\Transaction;
 
 class TransactionService extends BaseCrudService
@@ -37,11 +38,26 @@ class TransactionService extends BaseCrudService
         if ($entity->isDeposit()) {
             return $this->handleDeposit($entity);
         }
+
+        if ($entity->isWithdraw()) {
+            return $this->handleWithdraw($entity);
+        }
     }
 
     private function handleDeposit(Transaction $transaction)
     {
         $useCase = new DepositUseCase();
+        $useCase->setDependencie(
+            'account_service', $this->getDependencie('account_service'));
+        $useCase->setDependencie(
+            'transaction_repository', $this->getRepository());
+
+        return $useCase->handle($transaction);
+    }
+
+    private function handleWithdraw(Transaction $transaction)
+    {
+        $useCase = new WithdrawUseCase();
         $useCase->setDependencie(
             'account_service', $this->getDependencie('account_service'));
         $useCase->setDependencie(

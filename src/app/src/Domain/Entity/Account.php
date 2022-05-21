@@ -27,6 +27,11 @@ class Account extends BaseEntity
     {
         $this->balance += $value;
     }
+    
+    public function decrement(int $value): void
+    {
+        $this->balance -= $value;
+    }
 
     public static function fromArray(array $array): self
     {

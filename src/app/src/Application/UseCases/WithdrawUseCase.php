@@ -3,14 +3,14 @@
 namespace App\Application\UseCases;
 
 use App\Domain\Entity\Transaction;
-use App\Application\Exceptions\ResourceNotFoundException;
 use Throwable;
 use App\Domain\Entity\Account;
 use App\Application\UseCases\UseCaseResponse;
 use App\Application\UseCases\BaseUseCase;
 use App\Application\Contracts\TransactionUseCaseInterface;
+use InvalidArgumentException;
 
-class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
+class WithdrawUseCase extends BaseUseCase implements TransactionUseCaseInterface
 {
     public function getDependencieKeysRequired(): array
     {
@@ -21,25 +21,17 @@ class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
     {
         $this->checkDependencies();
 
-        try {
-            $account = $this
-                ->getDependencie('account_service')
-                ->find($transaction->getDestination());
-        } catch (ResourceNotFoundException $exc) {
-            $account = null;
-        }
+        $account = $this
+            ->getDependencie('account_service')
+            ->find($transaction->getOrigin());
 
         $transactionRepository = $this->getDependencie('transaction_repository');
         $transactionRepository->beginTransaction();
 
         try {
-            if (empty($account)) {
-                $result = $this->handleWithNonExistentDestination($transaction);
-            } else {
-                $result = $this->handleWithExistentDestination(
-                    $transaction, $account
-                );
-            }
+            $result = $this->handleWithExistentOrigin(
+                $transaction, $account
+            );
 
             $transactionRepository->storeTransaction($transaction);
             $transactionRepository->commit();
@@ -51,12 +43,18 @@ class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
         }
     }
 
-    private function handleWithExistentDestination(
+    private function handleWithExistentOrigin(
         Transaction $transaction, Account $account
     ): UseCaseResponse
     {
-        $account->sum($transaction->getAmount());
-        
+        if ($transaction->getAmount() > $account->getBalance()) {
+            throw new InvalidArgumentException(
+                'The amount requested for withdrawal is greater than available'
+            );
+        }
+
+        $account->decrement($transaction->getAmount());
+
         $accountData = $account->toArray();
         unset($accountData['created_at'], $accountData['deleted_at']);
 
@@ -65,29 +63,9 @@ class DepositUseCase extends BaseUseCase implements TransactionUseCaseInterface
 
         return $this->end(true,
             [
-                'destination' => [
+                'origin' => [
                     'id' => $account->getId(),
                     'balance' => $account->getBalance()
-                ]
-            ]
-        );
-    }
-
-    private function handleWithNonExistentDestination(
-        Transaction $transaction
-    ): UseCaseResponse
-    {
-        $accountService = $this->getDependencie('account_service');
-        $accountService->store([
-            'balance' => $transaction->getAmount(),
-            'id' => $transaction->getDestination()
-        ]);
-
-        return $this->end(true,
-            [
-                'destination' => [
-                    'id' => $transaction->getDestination(),
-                    'balance' => $transaction->getAmount()
                 ]
             ]
         );
