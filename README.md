@@ -168,7 +168,7 @@ OK (7 tests, 21 assertions)
 - Existe alguma dependência externa? SIM, PHPUNIT.
 - Existe algum analisador de qualidade de código? SIM, PHPSTAN.
 - Quanto tempo demora pra fazer um depósito? Média de 170ms
-- Quanto tempo demora pra fazer um saque? Média de 155ms
+- Quanto tempo demora pra fazer uma transferência? Média de 155ms
 - Quanto tempo demora pra fazer um saque? Média de 141ms
 
 ## Problemas
