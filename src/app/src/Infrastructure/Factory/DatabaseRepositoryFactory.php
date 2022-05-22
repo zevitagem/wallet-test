@@ -13,8 +13,6 @@ class DatabaseRepositoryFactory
 
     public static function newDatabase(string $type): ?DatabaseLevelInterface
     {
-        if (isset(self::$map[$type])) {
-            return new self::$map[$type]();
-        }
+        return (isset(self::$map[$type])) ? new self::$map[$type]() : null;
     }
 }

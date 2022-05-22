@@ -14,6 +14,8 @@ abstract class DatabaseCommand implements InputAdapterInterface
 {
     use Configurable;
 
+    protected OutputAdapterInterface $output;
+
     abstract public function getStrategy(): string;
 
     public function __construct()

@@ -15,6 +15,7 @@ class AccountService extends BaseCrudService
 {
     public function __construct()
     {
+        /** AccountRepositoryInterface */
         parent::setRepository(new AccountRepository());
         parent::setHandler(new AccountHandler());
         parent::setValidator(new AccountValidator());

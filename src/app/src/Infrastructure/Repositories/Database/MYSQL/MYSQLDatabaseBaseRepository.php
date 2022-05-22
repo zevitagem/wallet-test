@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repositories\Database\MYSQL;
 
 use App\Infrastructure\Repositories\Database\DatabaseRepository;
 use App\Infrastructure\Contracts\Repositories\ReversibleInterface;
+use Throwable;
 
 abstract class MYSQLDatabaseBaseRepository extends DatabaseRepository implements ReversibleInterface
 {
@@ -45,14 +46,13 @@ abstract class MYSQLDatabaseBaseRepository extends DatabaseRepository implements
         try {
             $exe = (!empty($params)) ? $sth->execute($params) : $sth->execute();
             if (!$exe) {
-                $this->throwException($exc);
                 //dd($this->dbConnection->errorInfo());
             }
 
             if (hasPrintDebug()) {
                 dd($sth->debugDumpParams());
             }
-        } catch (\Throwable $exc) {
+        } catch (Throwable $exc) {
             $this->throwException($exc);
         }
 

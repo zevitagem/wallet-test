@@ -6,7 +6,7 @@ use App\Infrastructure\Repositories\Database\MYSQL\MYSQLDatabaseBaseRepository;
 
 abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 {
-    public function getValidObjects()
+    public function getAllValids()
     {
         $sql = "SELECT * FROM {$this->getTable()} WHERE {$this->getDeletedAtColumn()} IS NULL";
         $res = $this->getConnectionDB()->query($sql);
@@ -61,7 +61,7 @@ abstract class MYSQLCRUDRepository extends MYSQLDatabaseBaseRepository
 
     public function save(array $data)
     {
-        $primary  = $this->model->getPrimaryKey();
+        $primary  = $this->getPrimaryKey();
         $isUpdate = false;
 
         if (!empty($data[$primary])) {

@@ -12,9 +12,10 @@ use App\Infrastructure\Traits\Configurable;
 
 class MigrationManager
 {
-
     use AvailabilityWithDependencie,
         Configurable;
+
+    private mixed $connection;
 
     public function __construct(
         private SimpleDatabaseInterface $conector,
@@ -48,7 +49,7 @@ class MigrationManager
         return $this->connectionType;
     }
 
-    public function getConnection()
+    public function getConnection(): mixed
     {
         return $this->connection;
     }

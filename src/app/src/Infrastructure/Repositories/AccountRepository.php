@@ -4,8 +4,9 @@ namespace App\Infrastructure\Repositories;
 
 use App\Domain\Entity\Account;
 use App\Infrastructure\Repositories\Database\MYSQL\MYSQLCRUDRepository;
+use App\Domain\Contracts\Repositories\AccountRepositoryInterface;
 
-class AccountRepository extends MYSQLCRUDRepository
+class AccountRepository extends MYSQLCRUDRepository implements AccountRepositoryInterface
 {
     public function getEntityClass(): string
     {

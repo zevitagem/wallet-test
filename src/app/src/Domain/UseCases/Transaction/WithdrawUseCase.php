@@ -6,7 +6,6 @@ use App\Domain\Entity\Transaction;
 use Throwable;
 use App\Domain\Entity\Account;
 use App\Domain\UseCases\UseCaseResponse;
-use InvalidArgumentException;
 use App\Domain\UseCases\Transaction\BaseTransactionUseCase;
 
 class WithdrawUseCase extends BaseTransactionUseCase
@@ -38,26 +37,23 @@ class WithdrawUseCase extends BaseTransactionUseCase
     }
 
     private function handleWithExistentOrigin(
-        Transaction $transaction, Account $account
+        Transaction $transaction, Account $originAccount
     ): UseCaseResponse
     {
         $amount  = $transaction->getAmount();
-
-        if ($amount > $account->getBalance()) {
-            throw new InvalidArgumentException(
-                    'The amount requested for withdrawal is greater than available'
-            );
+        if (!parent::hasEnoughBalance($amount, $originAccount)) {
+            return parent::end(true, null); //throws exception before
         }
 
-        $account->decrement($amount);
+        $originAccount->decrement($amount);
 
-        parent::updateAccount($account);
+        parent::updateAccount($originAccount);
 
         return parent::end(true,
             [
                 'origin' => [
-                    'id' => $account->getId(),
-                    'balance' => $account->getBalance()
+                    'id' => $originAccount->getId(),
+                    'balance' => $originAccount->getBalance()
                 ]
             ]
         );

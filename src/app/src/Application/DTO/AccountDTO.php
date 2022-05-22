@@ -8,9 +8,13 @@ use App\Domain\Contracts\EntityInterface;
 use App\Domain\Entity\Account;
 use DateTime;
 
-class AccountDTO extends DTO
+final class AccountDTO extends DTO
 {
     use AccountAttributes;
+
+    public function __construct()
+    {
+    }
 
     public function toDomain(): EntityInterface
     {

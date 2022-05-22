@@ -70,11 +70,9 @@ class DepositUseCase extends BaseTransactionUseCase
         $amount      = $transaction->getAmount();
         $destination = $transaction->getDestination();
 
-        $accountService = $this->getDependencie('account_service');
-        $accountService->store([
-            'balance' => $amount,
-            'id' => $destination
-        ]);
+        parent::createAccount(
+            $destination, $amount
+        );
 
         return parent::end(true,
             [

@@ -6,6 +6,8 @@ use App\Application\Contracts\DTOInterface;
 
 abstract class DTO implements DTOInterface
 {
+    abstract public function __construct();
+    
     public static function fromArray(array $parameters): self
     {
         $dto = new static;

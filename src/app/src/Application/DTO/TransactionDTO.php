@@ -8,9 +8,13 @@ use App\Domain\Contracts\EntityInterface;
 use App\Domain\Entity\Transaction;
 use DateTime;
 
-class TransactionDTO extends DTO
+final class TransactionDTO extends DTO
 {
     use TransactionAttributes;
+
+    public function __construct()
+    {
+    }
 
     public function toDomain(): EntityInterface
     {

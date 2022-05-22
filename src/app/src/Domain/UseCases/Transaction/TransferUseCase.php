@@ -6,8 +6,8 @@ use App\Domain\Entity\Transaction;
 use Throwable;
 use App\Domain\Entity\Account;
 use App\Domain\UseCases\UseCaseResponse;
-use InvalidArgumentException;
 use App\Domain\UseCases\Transaction\BaseTransactionUseCase;
+use App\Application\Exceptions\ResourceNotFoundException;
 
 class TransferUseCase extends BaseTransactionUseCase
 {
@@ -19,17 +19,27 @@ class TransferUseCase extends BaseTransactionUseCase
             ->getDependencie('account_service')
             ->find($transaction->getOrigin());
 
-        $destinationAccount = $this
-            ->getDependencie('account_service')
-            ->find($transaction->getDestination());
+        try {
+            $destinationAccount = $this
+                ->getDependencie('account_service')
+                ->find($transaction->getDestination());
+        } catch (ResourceNotFoundException $exc) {
+            $destinationAccount = null;
+        }
 
         $transactionRepository = $this->getDependencie('transaction_repository');
         $transactionRepository->beginTransaction();
 
         try {
-            $result = $this->handleWithBothExistent(
-                $transaction, $originAccount, $destinationAccount
-            );
+            if (!empty($originAccount) && !empty($destinationAccount)) {
+                $result = $this->handleWithBothExistent(
+                    $transaction, $originAccount, $destinationAccount
+                );
+            } else {
+                $result = $this->handleWithOnlyOrigin(
+                    $transaction, $originAccount
+                );
+            }
 
             $transactionRepository->storeTransaction($transaction);
             $transactionRepository->commit();
@@ -41,17 +51,46 @@ class TransferUseCase extends BaseTransactionUseCase
         }
     }
 
+    private function handleWithOnlyOrigin(
+        Transaction $transaction, Account $originAccount
+    ): UseCaseResponse
+    {
+        $amount      = $transaction->getAmount();
+        $destination = $transaction->getDestination();
+
+        if (!parent::hasEnoughBalance($amount, $originAccount)) {
+            return parent::end(true, null); //throws exception before
+        }
+
+        parent::createAccount(
+            $destination, $amount
+        );
+
+        $originAccount->decrement($amount);
+        parent::updateAccount($originAccount);
+
+        return parent::end(true,
+            [
+                'origin' => [
+                    'id' => $originAccount->getId(),
+                    'balance' => $originAccount->getBalance()
+                ],
+                'destination' => [
+                    'id' => $destination,
+                    'balance' => $amount
+                ]
+            ]
+        );
+    }
+
     private function handleWithBothExistent(
-        Transaction $transaction,
-        Account $originAccount,
+        Transaction $transaction, Account $originAccount,
         Account $destinationAccount
     ): UseCaseResponse
     {
         $amount = $transaction->getAmount();
-        if ($amount > $originAccount->getBalance()) {
-            throw new InvalidArgumentException(
-                    'The amount requested for transfer is greater than available'
-            );
+        if (!parent::hasEnoughBalance($amount, $originAccount)) {
+            return parent::end(true, null); //throws exception before
         }
 
         if ($originAccount->getId() != $destinationAccount->getId()) {
