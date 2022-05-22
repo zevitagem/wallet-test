@@ -25,9 +25,9 @@ abstract class BaseCrudService extends BaseService
         return $this->repository->store($data);
     }
 
-    public function getValidObjects()
+    public function getAllValids()
     {
-        return $this->repository->getValidObjects();
+        return $this->repository->getAllValids();
     }
 
     public function deleteById(int $id)

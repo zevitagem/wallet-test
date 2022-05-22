@@ -18,7 +18,7 @@ abstract class BaseUseCase implements UseCaseInterface
 
             if (empty($dependencie)) {
                 throw new RuntimeException(
-                        sprintf('Required dependency not found : "%s"', $key));
+                    sprintf('Required dependency not found : "%s"', $key));
             }
         }
     }

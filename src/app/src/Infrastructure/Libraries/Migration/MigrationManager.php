@@ -14,7 +14,7 @@ class MigrationManager
 {
     use AvailabilityWithDependencie,
         Configurable;
-
+    
     private mixed $connection;
 
     public function __construct(

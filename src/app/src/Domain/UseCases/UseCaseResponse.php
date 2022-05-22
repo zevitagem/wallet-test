@@ -2,7 +2,7 @@
 
 namespace App\Domain\UseCases;
 
-class UseCaseResponse
+final class UseCaseResponse
 {
     public function __construct(private bool $status, private mixed $content)
     {

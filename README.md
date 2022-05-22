@@ -145,6 +145,21 @@ Time: 00:00.203, Memory: 6.00 MB
 OK (7 tests, 21 assertions)
 ```
 
+## Analisadores de qualidade
+```
+$ vendor/bin/phpstan analyse src
+
+ 78/78 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+                                                                                                                        
+ [OK] No errors                                                                                                         
+                                                                                                                        
+ Tip of the Day:
+PHPStan is performing only the most basic checks.
+You can pass a higher rule level through the --level option
+(the default and current level is 0) to analyse code more thoroughly.
+```
+
+
 ## Estrutura das tabelas
 ![alt text](https://github.com/zevitagem/wallet-test/blob/main/github/images/schema_sql.png)
 

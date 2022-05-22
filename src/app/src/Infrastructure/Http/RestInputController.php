@@ -41,9 +41,9 @@ class RestInputController extends BaseController
                 'status' => false,
                 'message' => json_decode($exc->getMessage())
             ], 500);
-            
+
         } catch (ResourceNotFoundException $exc) {
-            
+
             $this->output->header();
             $this->output->httpCode(404);
             echo $exc->getMessage();

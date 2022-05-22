@@ -19,7 +19,7 @@ class EventController extends BaseController
         $this->mustPost();
 
         $response = $this->getService()->store($_POST);
-        $content = $response->getContent();
+        $content  = $response->getContent();
 
         if ($response->isSuccessfully()) {
             return $this->output->handle((array) $content, 201);

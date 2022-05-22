@@ -6,7 +6,7 @@ namespace App\Domain\Entity;
 use App\Domain\Traits\AccountAttributes;
 use App\Domain\Entity\BaseEntity;
 
-class Account extends BaseEntity
+final class Account extends BaseEntity
 {
     use AccountAttributes;
     

@@ -9,7 +9,6 @@ abstract class MigrationAction implements MigrationActionInterface
 {
     public function __construct(private MigrationManager $manager)
     {
-
     }
 
     public function getManager(): MigrationManager

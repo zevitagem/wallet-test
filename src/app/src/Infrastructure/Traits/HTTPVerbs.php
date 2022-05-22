@@ -2,11 +2,11 @@
 
 namespace App\Infrastructure\Traits;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 trait HTTPVerbs
 {
-    public function mustPost()
+    public function mustPost(): void
     {
         $verb = $_SERVER['REQUEST_METHOD'];
         if ($verb !== 'POST') {
@@ -14,7 +14,7 @@ trait HTTPVerbs
         }
     }
 
-    public function mustGet()
+    public function mustGet(): void
     {
         $verb = $_SERVER['REQUEST_METHOD'];
         if ($verb !== 'GET') {
@@ -24,7 +24,7 @@ trait HTTPVerbs
 
     private function throwCaseInvalidMethod(string $verb)
     {
-        throw new RuntimeException(
+        throw new InvalidArgumentException(
             sprintf('The requested method does not accept the submitted verb: "%s"',
                 $verb)
         );

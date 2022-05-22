@@ -6,5 +6,4 @@ use InvalidArgumentException;
 
 class ResourceNotFoundException extends InvalidArgumentException
 {
-    
 }

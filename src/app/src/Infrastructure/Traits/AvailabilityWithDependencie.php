@@ -4,7 +4,7 @@ namespace App\Infrastructure\Traits;
 
 trait AvailabilityWithDependencie
 {
-    protected $dependencies = [];
+    protected array $dependencies = [];
 
     public function setDependencie(string $key, $value): void
     {

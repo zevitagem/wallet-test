@@ -16,7 +16,7 @@ class TransactionService extends BaseCrudService
 {
     public function __construct()
     {
-        /** TransactionRepositoryInterface **/
+        /** TransactionRepositoryInterface * */
         parent::setRepository(new TransactionRepository());
         parent::setHandler(new TransactionHandler());
         parent::setValidator(new TransactionValidator());

@@ -12,7 +12,6 @@ class Router
 
     public function __construct(private InputAdapterInterface $controller)
     {
-
     }
 
     public function catchException(bool $value): void
@@ -50,8 +49,8 @@ class Router
 
         if (!method_exists($this->getController(), $action)) {
             throw new \InvalidArgumentException(
-                    sprintf('Could not resolve request with this method sent: "%s"',
-                        $action)
+                sprintf('Could not resolve request with this method sent: "%s"',
+                    $action)
             );
         }
 
@@ -99,7 +98,7 @@ class Router
 
         if ($preAction == 'public') {
             $preAction = $action;
-            $action = 'index';
+            $action    = 'index';
         }
 
         return compact('action', 'preAction');

@@ -5,10 +5,10 @@ namespace App\Infrastructure\Libraries\Database;
 use InvalidArgumentException;
 use Throwable;
 
-class DatabaseManager
+abstract class DatabaseManager
 {
-    private static array $connection = [];
     private static string $lastType  = '';
+    private static array $connection = [];
 
     public static function reset(string $type): void
     {

@@ -4,13 +4,13 @@ namespace App\Infrastructure\Libraries\Migration;
 
 use App\Infrastructure\Libraries\Migration\MigrationAction;
 
-class MigrationFiller extends MigrationAction
+final class MigrationFiller extends MigrationAction
 {
     private array $files = [
         'tables.php',
         'seeders.php'
     ];
-    
+
     public function handle(): mixed
     {
         if (!$this->can()) {
@@ -37,7 +37,7 @@ class MigrationFiller extends MigrationAction
     public function can(): bool
     {
         $manager = $this->getManager();
-        $result = $manager->getRepository()->getTotalTables(
+        $result  = $manager->getRepository()->getTotalTables(
             $manager->getDatabase()
         );
 
@@ -51,7 +51,7 @@ class MigrationFiller extends MigrationAction
     private function getFiles(): array
     {
         $connectionType = $this->getManager()->getConnectionType();
-        
+
         return array_filter(array_map(function ($file) use ($connectionType) {
             $path = "../database/{$connectionType}/{$file}";
             return (file_exists($path)) ? $path : null;

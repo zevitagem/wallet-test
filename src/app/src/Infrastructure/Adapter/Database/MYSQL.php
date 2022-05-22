@@ -5,7 +5,7 @@ namespace App\Infrastructure\Adapter\Database;
 use App\Infrastructure\Contracts\Adapter\Database\SimpleDatabaseInterface;
 use PDO;
 
-class MYSQL implements SimpleDatabaseInterface
+final class MYSQL implements SimpleDatabaseInterface
 {
     private $instance;
 

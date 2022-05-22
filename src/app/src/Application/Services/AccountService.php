@@ -33,7 +33,7 @@ class AccountService extends BaseCrudService
     }
 
     public function store(array $data)
-    {   
+    {
         parent::handle($data, __FUNCTION__);
         $dto = AccountDTO::fromArray($data);
         parent::validate($dto, __FUNCTION__);

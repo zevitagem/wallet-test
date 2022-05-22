@@ -5,7 +5,7 @@ namespace App\Infrastructure\Libraries\Migration;
 use App\Infrastructure\Libraries\Migration\MigrationAction;
 use App\Infrastructure\Providers\DatabaseProvider;
 
-class MigrationReseter extends MigrationAction
+final class MigrationReseter extends MigrationAction
 {
     public function handle(): mixed
     {

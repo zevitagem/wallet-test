@@ -29,10 +29,12 @@ class AccountRepository extends MYSQLCRUDRepository implements AccountRepository
 
     public function updateAccount(Account $account)
     {
-        return parent::updateById($account->getId(), [
-            //'id' => $account->getId(),
-            //'name' => $account->getName(),
-            'balance' => $account->getBalance()
-        ]);
+        return parent::updateById($account->getId(),
+            [
+                //'id' => $account->getId(),
+                //'name' => $account->getName(),
+                'balance' => $account->getBalance()
+            ]
+        );
     }
 }

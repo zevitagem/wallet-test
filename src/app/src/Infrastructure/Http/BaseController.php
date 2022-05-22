@@ -14,7 +14,6 @@ abstract class BaseController implements InputAdapterInterface
     use HTTPVerbs,
         Configurable,
         ApplicationServiceManager;
-    
     protected RestOutputAdapter $output;
 
     public function __construct()

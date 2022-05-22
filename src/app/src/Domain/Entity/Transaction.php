@@ -6,7 +6,7 @@ namespace App\Domain\Entity;
 use App\Domain\Traits\TransactionAttributes;
 use App\Domain\Entity\BaseEntity;
 
-class Transaction extends BaseEntity
+final class Transaction extends BaseEntity
 {
     use TransactionAttributes;
 

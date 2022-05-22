@@ -40,7 +40,7 @@ class WithdrawUseCase extends BaseTransactionUseCase
         Transaction $transaction, Account $originAccount
     ): UseCaseResponse
     {
-        $amount  = $transaction->getAmount();
+        $amount = $transaction->getAmount();
         if (!parent::hasEnoughBalance($amount, $originAccount)) {
             return parent::end(true, null); //throws exception before
         }

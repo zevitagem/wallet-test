@@ -5,7 +5,7 @@ namespace App\Domain\Traits;
 trait TransactionAttributes
 {
     public string $type;
-    public ?int $origin = null;
+    public ?int $origin      = null;
     public ?int $destination = null;
     public int $amount;
 
