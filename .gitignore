@@ -1,4 +1,7 @@
 nbproject
-src/app/vendor
 storage/
+.history/
 src/app/composer.lock
+src/app/vendor
+src/app/.phpunit.result.cache
+src/app/.env
