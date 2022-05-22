@@ -151,25 +151,25 @@ OK (7 tests, 21 assertions)
 
 ## O que foi implementado e o que ficou pendente?
 
-As rotas propostas estão funcionando? SIM.
-Existem as configurações do `NGROK` pelo projeto? SIM.
-Conseguiu executar à tempo a suíte de testes usando o `NGROK`? NÃO.
-Testou por onde para garantir o funcionamento? POSTMAN.
-Existem testes unitários e estão passando? SIM e SIM.
-Existem testes de integração? NÃO.
-Como a aplicação controla o estado? BANCO DE DADOS.
-Possui contato com testes de integração no dia-a-dia? qual? SIM, CYPRESS.
-Usou algum framework conhecido no mercado? NÃO.
-Iniciou o desenvolvimento do zero? SIM.
-Se não usou framework, por que não usou? Porque a complexidade do exercício não exigia.
-Aplicou qual conceito para estruturar a aplicação? DDD.
-Usou algum design pattern? quais? SIM, repositórios, adapters, factories, etc.
-As regras de domínio estão isoladas da infraestrutura e negócio? SIM.
-Existe alguma dependência externa? SIM, PHPUNIT.
-Existe algum analisador de qualidade de código? SIM, PHPSTAN.
-Quanto tempo demora pra fazer um depósito? Média de 170ms
-Quanto tempo demora pra fazer um saque? Média de 155ms
-Quanto tempo demora pra fazer um saque? Média de 141ms
+- As rotas propostas estão funcionando? SIM.
+- Existem as configurações do `NGROK` pelo projeto? SIM.
+- Conseguiu executar à tempo a suíte de testes usando o `NGROK`? NÃO.
+- Testou por onde para garantir o funcionamento? POSTMAN.
+- Existem testes unitários e estão passando? SIM e SIM.
+- Existem testes de integração? NÃO.
+- Como a aplicação controla o estado? BANCO DE DADOS.
+- Possui contato com testes de integração no dia-a-dia? qual? SIM, CYPRESS.
+- Usou algum framework conhecido no mercado? NÃO.
+- Iniciou o desenvolvimento do zero? SIM.
+- Se não usou framework, por que não usou? Porque a complexidade do exercício não exigia.
+- Aplicou qual conceito para estruturar a aplicação? DDD.
+- Usou algum design pattern? quais? SIM, repositórios, adapters, factories, etc.
+- As regras de domínio estão isoladas da infraestrutura e negócio? SIM.
+- Existe alguma dependência externa? SIM, PHPUNIT.
+- Existe algum analisador de qualidade de código? SIM, PHPSTAN.
+- Quanto tempo demora pra fazer um depósito? Média de 170ms
+- Quanto tempo demora pra fazer um saque? Média de 155ms
+- Quanto tempo demora pra fazer um saque? Média de 141ms
 
 ## Problemas
 Infelizmente, por algum motivo, não foi possível fazer funcionar o `NGROK` ( *publish it on the internet* ), seguem os erros durante as tentativas:
