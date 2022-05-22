@@ -146,7 +146,7 @@ OK (7 tests, 21 assertions)
 ```
 
 ## Estrutura das tabelas
-![alt text](https://github.com/zevitagem/wallet-test/tree/main/github/images/schema_sql.png)
+![alt text](https://github.com/zevitagem/wallet-test/blob/main/github/images/schema_sql.png)
 
 
 ## O que foi implementado e o que ficou pendente?
